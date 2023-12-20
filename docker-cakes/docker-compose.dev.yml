@@ -1,0 +1,28 @@
+version: "3"
+
+volumes:
+  postgres_data:
+
+services:
+  web:
+    restart: always
+    build:
+      context: ..
+      dockerfile: docker-cakes/Dockerfile.web.local
+    container_name: cakes_web
+    volumes:
+      - ../project:/src
+    ports:
+      - "8011:8000"
+    depends_on:
+      - postgres_cakes
+
+  postgres_cakes:
+    image: postgres:13
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    env_file:
+      - ../project/.env
+    ports:
+      - "5445:5432"
